@@ -9,8 +9,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
 
-    @ExceptionHandler(value = [BlockedQnAExtractionException::class])
-    fun handleNotFoundException(ex: BlockedQnAExtractionException): ResponseEntity<String> {
+    @ExceptionHandler(value = [BlockedQnAExtractionException::class, QnAExtractionException::class])
+    fun handleExtractionException(ex: QnAExtractionException): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(value = [ProductNotFoundExtractionException::class])
+    fun handleProductNotFoundException(ex: ProductNotFoundExtractionException): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.NOT_FOUND);
     }
 }
