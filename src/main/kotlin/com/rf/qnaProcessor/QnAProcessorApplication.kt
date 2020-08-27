@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class QAProcessorApplication
+class QnAProcessorApplication
 
 fun main(args: Array<String>) {
-    runApplication<QAProcessorApplication>(*args)
+    runApplication<QnAProcessorApplication>(*args)
 }
