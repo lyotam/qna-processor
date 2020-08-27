@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.rf.qnaProcessor.error.BlockedQnAExtractionException
 import com.rf.qnaProcessor.error.ProductNotFoundExtractionException
 import com.rf.qnaProcessor.error.QnAExtractionException
+import com.rf.qnaProcessor.generateValidQnAList
 import com.rf.qnaProcessor.model.QnAEntry
 import com.rf.qnaProcessor.service.QnAService
 import io.mockk.every
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import java.lang.IllegalArgumentException
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(QnAController::class)
@@ -47,10 +47,7 @@ internal class QnAControllerTest {
 
     @Test
     fun `Given valid ASIN request, a QnAEntry list is returned`() {
-        val expected = listOf(
-            QnAEntry("Tx2DB5O5HUUG63W", 47, "Does echo dot 3rd work outsides when unplugged?", "No"),
-            QnAEntry("Tx25UVO5MVMGQZY", 40, "Any accessory recommend for echo dot 3rd?", "Gosund outlets")
-        )
+        val expected = generateValidQnAList()
 
         every {
             qnaService.extractMultipleQnAs(any(), any())
