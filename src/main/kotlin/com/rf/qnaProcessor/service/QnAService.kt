@@ -56,7 +56,7 @@ class QnAService (
         for (qnaSection in qnaElements) {
             val votes = qnaSection.select("span[class~=count]").first().text()?.toInt()
             val qSection = qnaSection.select("div[id~=^question-]").first()
-            val (qId) = questionIdRegex.find(qSection.id())?.destructured
+            val (qid) = questionIdRegex.find(qSection.id())?.destructured
                 ?: throw QnAExtractionException("Page format changed")
             val question = qSection.select("span[class~=a-declarative]").first().text()
             val answer = qSection.siblingElements().first()
@@ -66,7 +66,7 @@ class QnAService (
                     else text()
                 }
 
-            qnaEntries.add(QnAEntry(qId, votes, question, answer))
+            qnaEntries.add(QnAEntry(qid, votes, question, answer))
             if (qnaEntries.size == totalToExtract) break
         }
     }
