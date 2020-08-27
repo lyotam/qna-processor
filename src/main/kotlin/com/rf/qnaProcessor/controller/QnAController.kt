@@ -14,6 +14,6 @@ class QnAController (
     @ResponseStatus(HttpStatus.OK)
     fun getProductQnAs(@PathVariable asin: String, @RequestParam(required = false) amount: Int?): List<QnAEntry> {
         log.info { "new product Q&As request - ASIN: $asin, amount: ${amount ?: "Not Specified"}" }
-        return qnaService.extractMultipleQnA(asin, amount)
+        return qnaService.extractMultipleQnAs(asin, amount)
     }
 }

@@ -14,13 +14,16 @@ import org.springframework.stereotype.Service
 class QnAService (
     val defaultEntryAmount: Int = 10
 ) : Logging {
-    fun extractMultipleQnA(asin: String, amount: Int?): List<QnAEntry> {
+    private val numQuestionsRegex = "of (\\d+)\\+? questions".toRegex()
+    private val questionIdRegex = "^question-(\\w+)$".toRegex()
+
+    fun extractMultipleQnAs(asin: String, amount: Int?): List<QnAEntry> {
         val qnaEntries = mutableListOf<QnAEntry>()
         var pageNum = 1
         var page = loadPage(asin, pageNum)
 
         val paginationHeader = page.select("div[class~=a-section askPaginationHeaderMessage] > span").first().text()
-        val (totalQuestionsStr) = "of (\\d+)\\+? questions".toRegex().find(paginationHeader)?.destructured
+        val (totalQuestionsStr) = numQuestionsRegex.find(paginationHeader)?.destructured
             ?: throw QnAExtractionException("Page format changed")
         val totalQuestionsToExtract = amount?.let { totalQuestionsStr.toInt().coerceAtMost(it) } ?: defaultEntryAmount
 
@@ -48,13 +51,12 @@ class QnAService (
         }
     }
 
-    //todo: change refence to list
     private fun extractPageQnAs(page: Document, qnaEntries: MutableList<QnAEntry>, totalToExtract: Int) {
         val qnaElements = page.select("div[class~=a-section askTeaserQuestions]").first().children()
         for (qnaSection in qnaElements) {
             val votes = qnaSection.select("span[class~=count]").first().text()?.toInt()
             val qSection = qnaSection.select("div[id~=^question-]").first()
-            val (qId) = "^question-(\\w+)$".toRegex().find(qSection.id())?.destructured
+            val (qId) = questionIdRegex.find(qSection.id())?.destructured
                 ?: throw QnAExtractionException("Page format changed")
             val question = qSection.select("span[class~=a-declarative]").first().text()
             val answer = qSection.siblingElements().first()
