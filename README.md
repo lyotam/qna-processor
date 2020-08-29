@@ -23,6 +23,15 @@ examples:
 
 
 ## How to run this app:
+
+#### Using Docker
+A Docker Image of the App is available in docker hub:
+```
+docker run -p 8080:8080 lyotam/qna-processor
+```
+
+#### Using Running Scripts
+
 First clone the repository and access the directory:
 ```
 $ git clone https://github.com/lyotam/qna-processor.git
